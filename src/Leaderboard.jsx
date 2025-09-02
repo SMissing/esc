@@ -80,9 +80,11 @@ export default function Leaderboard() {
                   {grouped[game].length === 0 ? (
                     <tr><td colSpan={2} style={{ textAlign: 'center' }}>No scores</td></tr>
                   ) : (
-                    grouped[game].map(({ name, score }) => (
+                    grouped[game].slice(0, 20).map(({ name, score }, idx) => (
                       <tr key={name}>
-                        <td style={{ textAlign: 'left', padding: '4px 8px', fontWeight: 500 }}>{name}</td>
+                        <td style={{ textAlign: 'left', padding: '4px 8px', fontWeight: 500 }}>
+                          <span style={{ fontWeight: 700, marginRight: 8 }}>{idx + 1}.</span>{name}
+                        </td>
                         <td style={{ textAlign: 'right', padding: '4px 8px', fontVariantNumeric: 'tabular-nums' }}>{score}</td>
                       </tr>
                     ))
