@@ -368,17 +368,20 @@ export default function Leaderboard() {
           textAlign: 'left',
         }}
       />
-      {/* Version label in bottom right */}
+      {/* Version label in bottom right, always spaced from screen edge */}
       <span style={{
-        position: 'absolute',
-        right: 69,
-        bottom: 6,
+        position: 'fixed',
+        right: '18px',
+        bottom: '12px',
         fontSize: '0.75rem',
         color: '#bbb',
         opacity: 0.7,
         fontFamily: 'Bebas Neue, sans-serif',
         pointerEvents: 'none',
-        zIndex: 101,
+        zIndex: 9999,
+        background: 'transparent',
+        padding: '2px 8px',
+        borderRadius: '6px',
       }}>
         Alpha 0.0.1
       </span>
