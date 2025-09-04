@@ -1,4 +1,14 @@
 @font-face {
+  font-family: 'Bebas Neue';
+  src: url('./fonts/Bebas-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
   font-family: 'CircusFont';
   src: url('./fonts/circus.ttf') format('truetype');
   font-weight: normal;
