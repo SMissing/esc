@@ -371,7 +371,7 @@ export default function Leaderboard() {
       {/* Version label in bottom right */}
       <span style={{
         position: 'absolute',
-        right: 12,
+        right: 69,
         bottom: 6,
         fontSize: '0.75rem',
         color: '#bbb',
