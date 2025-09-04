@@ -343,6 +343,7 @@ export default function Leaderboard() {
       maxWidth: '100vw',
       minHeight: '110px',
       opacity: 1,
+      position: 'relative',
     }}>
       <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.8rem', color: '#FFF5DA', fontWeight: 700, marginRight: 18, letterSpacing: '0.01em' }}>
         We Escaped the:
@@ -367,6 +368,20 @@ export default function Leaderboard() {
           textAlign: 'left',
         }}
       />
+      {/* Version label in bottom right */}
+      <span style={{
+        position: 'absolute',
+        right: 12,
+        bottom: 6,
+        fontSize: '0.75rem',
+        color: '#bbb',
+        opacity: 0.7,
+        fontFamily: 'Bebas Neue, sans-serif',
+        pointerEvents: 'none',
+        zIndex: 101,
+      }}>
+        Alpha 0.0.1
+      </span>
     </div>
       </div>
     </>
