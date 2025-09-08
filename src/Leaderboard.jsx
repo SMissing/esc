@@ -17,6 +17,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function Leaderboard() {
+  // Track if this is the first mount (refresh)
+  const isFirstMount = useRef(true);
   const [scores, setScores] = useState([]);
   const [justPosted, setJustPosted] = useState(null); // { game, team }
   const rowRefs = useRef({});
@@ -58,6 +60,12 @@ export default function Leaderboard() {
     const latestTeamRef = ref(db, 'latestTeamPosted');
     const unsubscribe = onValue(latestTeamRef, (snapshot) => {
       const obj = snapshot.val();
+      if (isFirstMount.current) {
+        // On first mount (refresh), do not show modal/highlight
+        isFirstMount.current = false;
+        setJustPosted(null);
+        return;
+      }
       if (obj && obj.team && obj.game) {
         setJustPosted(obj);
       } else {
@@ -162,8 +170,8 @@ export default function Leaderboard() {
         justifyContent: 'space-evenly',
         alignItems: 'center',
         gap: 0,
-        padding: '12px 0 8px 0',
-        borderBottom: '2px solid #222',
+        padding: '36px 0 24px 0', // Increased padding for top banner
+        borderBottom: '4px solid #222', // Thicker border
         margin: 0,
         boxShadow: 'none',
         maxWidth: '100vw',
@@ -184,7 +192,7 @@ export default function Leaderboard() {
           return (
             <div key={game} style={{ flex: 1, minWidth: 0, textAlign: 'center' }}>
               <span
-                style={{ fontFamily, fontSize: '7.5rem', letterSpacing: '0.05em', color, fontWeight: 700 }}
+                style={{ fontFamily, fontSize: '12rem', letterSpacing: '0.08em', color, fontWeight: 700, textShadow: '0 4px 32px #000, 0 2px 8px #000' }}
               >
                 {game}
               </span>
@@ -194,7 +202,7 @@ export default function Leaderboard() {
       </div>
       {/* Main Content */}
   <div style={{ position: 'relative', width: '100vw', marginTop: 0, padding: 0, maxWidth: '100vw' }}>
-    <div style={{ width: '100vw', display: 'flex', gap: 32, justifyContent: 'space-evenly', alignItems: 'flex-start', padding: 0, maxWidth: '100vw', position: 'relative', zIndex: 1 }}>
+    <div style={{ width: '100vw', display: 'flex', gap: 96, justifyContent: 'space-evenly', alignItems: 'flex-start', padding: '0 48px', maxWidth: '100vw', position: 'relative', zIndex: 1 }}>
   {games.map(game => {
           let fontFamily = '';
           if (game === 'Circus') fontFamily = 'CircusFont';
@@ -214,16 +222,16 @@ export default function Leaderboard() {
           return (
             <div key={game} style={{ flex: 1, minWidth: 0, padding: 0, background: 'none', boxShadow: 'none' }}>
               {subtitle && (
-                <div style={{ textAlign: 'center', fontSize: '1.1rem', marginBottom: 8, fontWeight: 400, opacity: 0.1 }}>{subtitle}</div>
+                <div style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: 24, fontWeight: 400, opacity: 0.18, letterSpacing: '0.04em' }}>{subtitle}</div>
               )}
-              <TableContainer sx={{ background: 'rgba(24,24,28,0.7)', boxShadow: 'none', maxHeight: 1100, minHeight: 480, overflow: 'auto' }}>
-                <Table stickyHeader size="small" aria-label={`${game} leaderboard`} sx={{ background: 'transparent', fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.35rem' }}>
+              <TableContainer sx={{ background: 'rgba(24,24,28,0.7)', boxShadow: 'none', maxHeight: 1800, minHeight: 900, overflow: 'auto', borderRadius: 24 }}>
+                <Table stickyHeader size="small" aria-label={`${game} leaderboard`} sx={{ background: 'transparent', fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.5rem' }}>
                   <TableHead>
                     {/* Header Row (sticky) */}
                     <TableRow sx={{ position: 'sticky', top: 0, zIndex: 120 }}>
-                      <TableCell sx={{ color: '#FFF5DAFF', fontWeight: 700, fontSize: '1.35rem', background: 'rgba(34,34,34,0.96)', fontFamily: 'Bebas Neue, sans-serif' }}>Place</TableCell>
-                      <TableCell sx={{ color, fontWeight: 700, fontSize: '1.35rem', background: 'rgba(34,34,34,0.96)', fontFamily: 'Bebas Neue, sans-serif' }}>Name</TableCell>
-                      <TableCell sx={{ color: '#fff', fontWeight: 700, fontSize: '1.35rem', background: 'rgba(34,34,34,0.96)', textAlign: 'right', fontFamily: 'Bebas Neue, sans-serif' }}>{game === 'Sharpshooters' ? 'Score' : 'Time'}</TableCell>
+                      <TableCell sx={{ color: '#FFF5DAFF', fontWeight: 700, fontSize: '2.5rem', background: 'rgba(34,34,34,0.96)', fontFamily: 'Bebas Neue, sans-serif', padding: '32px 32px' }}>Place</TableCell>
+                      <TableCell sx={{ color, fontWeight: 700, fontSize: '2.5rem', background: 'rgba(34,34,34,0.96)', fontFamily: 'Bebas Neue, sans-serif', padding: '32px 32px' }}>Name</TableCell>
+                      <TableCell sx={{ color: '#fff', fontWeight: 700, fontSize: '2.5rem', background: 'rgba(34,34,34,0.96)', textAlign: 'right', fontFamily: 'Bebas Neue, sans-serif', padding: '32px 32px' }}>{game === 'Sharpshooters' ? 'Score' : 'Time'}</TableCell>
                     </TableRow>
                     {/* Top 3 Rows (not sticky, just follow header) with tie handling */}
                     {(() => {
@@ -259,13 +267,13 @@ export default function Leaderboard() {
                               if (el) rowRefs.current[`${game}-${name}`] = el;
                             }}
                             className={highlightClass}
-                            sx={{ backgroundColor: rowBg, fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem' }}
+                            sx={{ backgroundColor: rowBg, fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', height: 96 }}
                           >
-                            <TableCell sx={{ color: '#fff', fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem', background: rowBg }}>{displayPlace}</TableCell>
-                            <TableCell sx={{ color: '#fff', fontWeight: 500, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem', background: rowBg }}>
+                            <TableCell sx={{ color: '#fff', fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', background: rowBg, padding: '24px 32px' }}>{displayPlace}</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 500, maxWidth: 420, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', background: rowBg, padding: '24px 32px' }}>
                               <span className={metallicClass}>{name}</span>
                             </TableCell>
-                            <TableCell sx={{ color: '#fff', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500, fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem', background: rowBg }}>{score}</TableCell>
+                            <TableCell sx={{ color: '#fff', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500, fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', background: rowBg, padding: '24px 32px' }}>{score}</TableCell>
                           </TableRow>
                         );
                       });
@@ -306,11 +314,11 @@ export default function Leaderboard() {
                                 if (el) rowRefs.current[`${game}-${name}`] = el;
                               }}
                               className={highlightClass}
-                              sx={{ backgroundColor: rowBg, fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem' }}
+                              sx={{ backgroundColor: rowBg, fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', height: 88 }}
                             >
-                              <TableCell sx={{ color: '#fff', fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem' }}>{displayPlace}</TableCell>
-                              <TableCell sx={{ color: '#fff', fontWeight: 500, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem' }}>{name}</TableCell>
-                              <TableCell sx={{ color: '#fff', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500, fontFamily: 'Bebas Neue, sans-serif', fontSize: '1.25rem' }}>{score}</TableCell>
+                              <TableCell sx={{ color: '#fff', fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', padding: '20px 32px' }}>{displayPlace}</TableCell>
+                              <TableCell sx={{ color: '#fff', fontWeight: 500, maxWidth: 420, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', padding: '20px 32px' }}>{name}</TableCell>
+                              <TableCell sx={{ color: '#fff', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500, fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.2rem', padding: '20px 32px' }}>{score}</TableCell>
                             </TableRow>
                           );
                         });
@@ -336,16 +344,16 @@ export default function Leaderboard() {
       justifyContent: 'flex-start',
       alignItems: 'center',
       gap: 0,
-      padding: '12px 0 8px 48px',
-      borderTop: '2px solid #222',
+      padding: '36px 0 24px 96px', // Increased padding for bottom banner
+      borderTop: '4px solid #222', // Thicker border
       margin: 0,
       boxShadow: 'none',
       maxWidth: '100vw',
-      minHeight: '110px',
+      minHeight: '220px', // Taller bottom banner
       opacity: 1,
       position: 'relative',
     }}>
-      <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '2.8rem', color: '#FFF5DA', fontWeight: 700, marginRight: 18, letterSpacing: '0.01em' }}>
+      <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: '5.2rem', color: '#FFF5DA', fontWeight: 700, marginRight: 48, letterSpacing: '0.01em' }}>
         We Escaped the:
       </span>
       <WordSwapList
@@ -360,10 +368,10 @@ export default function Leaderboard() {
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
         style={{
           fontFamily: 'Bebas Neue, sans-serif',
-          fontSize: '4.2rem',
+          fontSize: '8.2rem',
           fontWeight: 700,
           letterSpacing: '0.04em',
-          minWidth: 180,
+          minWidth: 420,
           display: 'inline-block',
           textAlign: 'left',
         }}
@@ -371,19 +379,19 @@ export default function Leaderboard() {
       {/* Version label in bottom right, always spaced from screen edge */}
       <span style={{
         position: 'fixed',
-        right: '18px',
-        bottom: '12px',
-        fontSize: '0.75rem',
+        right: '48px',
+        bottom: '36px',
+        fontSize: '2.2rem',
         color: '#bbb',
         opacity: 0.7,
         fontFamily: 'Bebas Neue, sans-serif',
         pointerEvents: 'none',
         zIndex: 9999,
         background: 'transparent',
-        padding: '2px 8px',
-        borderRadius: '6px',
+        padding: '8px 24px',
+        borderRadius: '12px',
       }}>
-        Alpha 0.0.1
+        Alpha 0.0.5
       </span>
     </div>
       </div>

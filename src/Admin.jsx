@@ -14,6 +14,16 @@ const GAMES = [
 import './RockerToggle.css';
 
 export default function Admin() {
+  // Handler to close the modal manually (clear modal/highlight on leaderboard)
+  const handleCloseModal = async () => {
+    await set(ref(db, 'latestTeamPosted'), null);
+    setMessage('Modal closed!');
+  };
+  // Handler to reset highlights (clear modal/highlight on leaderboard)
+  const handleResetHighlights = async () => {
+    await set(ref(db, 'latestTeamPosted'), null);
+    setMessage('Highlights reset!');
+  };
   // Only one useState for selected activity
   const [leaderboardView, setLeaderboardView] = useState(() => localStorage.getItem('leaderboardView') || 'escape');
 
@@ -50,8 +60,8 @@ export default function Admin() {
       data = { score: escapeTime, createdAt: Date.now() };
     }
   await set(ref(db, `${path}/${key}`), data);
-  // Signal to leaderboard which team/activity was just posted
-  localStorage.setItem('latestTeamPosted', JSON.stringify({ game: selected, team: key }));
+  // Signal to leaderboard which team/activity was just posted (cross-device)
+  await set(ref(db, 'latestTeamPosted'), { game: selected, team: key });
   setMessage('Posted!');
   setTeamName('');
   setEscapeTime('');
@@ -69,6 +79,40 @@ export default function Admin() {
 
   return (
     <>
+      <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <button
+          onClick={handleResetHighlights}
+          style={{
+            fontSize: '1rem',
+            padding: '6px 16px',
+            borderRadius: '6px',
+            background: '#222',
+            color: '#fff',
+            border: 'none',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            cursor: 'pointer',
+            opacity: 0.85,
+          }}
+        >
+          Reset Highlights
+        </button>
+        <button
+          onClick={handleCloseModal}
+          style={{
+            fontSize: '1rem',
+            padding: '6px 16px',
+            borderRadius: '6px',
+            background: '#e53935',
+            color: '#fff',
+            border: 'none',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            cursor: 'pointer',
+            opacity: 0.85,
+          }}
+        >
+          Close Finish Time
+        </button>
+      </div>
       {/* Cool toggle in top right */}
       <div className="rocker-toggle-container">
         <label className="rocker">

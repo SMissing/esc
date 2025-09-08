@@ -1,32 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
-
-let userHasInteracted = false;
-if (typeof window !== 'undefined' && !window._userInteractionListenerAdded) {
-  window.addEventListener('pointerdown', () => {
-    userHasInteracted = true;
-  }, { once: true });
-  window._userInteractionListenerAdded = true;
-}
+import React, { useEffect, useState } from 'react';
 import { FlapDisplay, Presets } from 'react-split-flap-effect';
 import './NewTeamModal.css';
 
 export default function NewTeamModal({ open, game, team, score, color, fontFamily, onClose }) {
-  const audioRef = useRef(null);
   const [displayScore, setDisplayScore] = useState('00:00');
   const [animating, setAnimating] = useState(true);
-
-  useEffect(() => {
-    if (open && audioRef.current && userHasInteracted) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
-    }
-  }, [open]);
 
   useEffect(() => {
     if (!open) return;
     setDisplayScore('00:00');
     setAnimating(true);
-    // Animate random numbers for 3 seconds, then show actual score for 3 seconds
+    // Animate random numbers for 5 seconds, then show actual score for 5 seconds
     const randomInterval = setInterval(() => {
       setDisplayScore(
         score.length === 5
@@ -38,14 +22,10 @@ export default function NewTeamModal({ open, game, team, score, color, fontFamil
       clearInterval(randomInterval);
       setDisplayScore(score);
       setAnimating(false);
-    }, 3000);
-    const closeTimeout = setTimeout(() => {
-      onClose();
-    }, 6000);
+    }, 5000);
     return () => {
       clearInterval(randomInterval);
       clearTimeout(showScoreTimeout);
-      clearTimeout(closeTimeout);
     };
   }, [open, score, onClose]);
 
@@ -89,12 +69,6 @@ export default function NewTeamModal({ open, game, team, score, color, fontFamil
           fontWeight: 700,
           marginBottom: 64,
         }}>{team}</div>
-        <>
-          <audio
-            ref={audioRef}
-            src="/sounds/ESM_One_Shot_FX_Interface_Transition_Tonal_03_Sweep_Loading_Menu_Melodic_Cm.wav"
-            preload="auto"
-          />
         <div style={{
           display: 'flex',
           justifyContent: 'center',
@@ -148,7 +122,6 @@ export default function NewTeamModal({ open, game, team, score, color, fontFamil
             />
           )}
         </div>
-        </>
       </div>
     </div>
   );
