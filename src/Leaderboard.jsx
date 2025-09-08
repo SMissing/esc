@@ -120,7 +120,9 @@ export default function Leaderboard() {
           if (!justPosted || obj.team !== justPosted.team || obj.game !== justPosted.game) {
             setJustPosted(obj);
           }
-        } catch {}
+        } catch {
+          // Ignore JSON parse errors
+        }
       }
     };
     window.addEventListener('storage', handleStorage);
@@ -204,12 +206,6 @@ export default function Leaderboard() {
   <div style={{ position: 'relative', width: '100vw', marginTop: 0, padding: '24px', maxWidth: '100vw' }}>
     <div style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', display: 'flex', gap: 48, justifyContent: 'space-evenly', alignItems: 'flex-start', padding: 0, position: 'relative', zIndex: 1 }}>
   {games.map(game => {
-          let fontFamily = '';
-          if (game === 'Circus') fontFamily = 'CircusFont';
-          else if (game === 'Labyrinth') fontFamily = 'LabyrinthFont';
-          else if (game === 'Cabin') fontFamily = 'CabinFont';
-          else if (game === 'Sharpshooters') fontFamily = 'SharpshootersFont';
-
           let color = '';
           if (game === 'Circus') color = '#FF4A47FF';
           else if (game === 'Labyrinth') color = '#93C72CFF';
@@ -237,7 +233,7 @@ export default function Leaderboard() {
                     {(() => {
                       let lastScore = null;
                       let place = 1;
-                      return grouped[game].slice(0, 3).map(({ name, score }, idx, arr) => {
+                      return grouped[game].slice(0, 3).map(({ name, score }, idx) => {
                         let metallicClass = '';
                         if (idx === 0) metallicClass = 'metallic-gold';
                         else if (idx === 1) metallicClass = 'metallic-silver';
