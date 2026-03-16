@@ -93,9 +93,22 @@ exports.sendEscapePhoto = functions.https.onCall(async (data, context) => {
       </div>
     `;
 
+    console.log('Verifying SMTP connection...');
+    // Verify connection before sending
+    try {
+      await emailTransporter.verify();
+      console.log('SMTP connection verified');
+    } catch (verifyError) {
+      console.error('SMTP verification failed:', verifyError);
+      throw new functions.https.HttpsError(
+        'internal',
+        `SMTP connection failed: ${verifyError.message || 'Unknown error'}`
+      );
+    }
+
     console.log('Sending email to:', customerEmail);
-    // Send email
-    const result = await emailTransporter.sendMail({
+    // Send email with timeout
+    const sendPromise = emailTransporter.sendMail({
       from: config.ionos?.smtp_user || 'escape@spiritsbarandgames.com',
       to: customerEmail,
       subject: `Your Escape Room Photo – ${roomName}`,
@@ -109,19 +122,32 @@ exports.sendEscapePhoto = functions.https.onCall(async (data, context) => {
       ],
     });
 
+    // Add timeout (30 seconds)
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Email send timeout after 30 seconds')), 30000);
+    });
+
+    const result = await Promise.race([sendPromise, timeoutPromise]);
     console.log('Email sent successfully:', result.messageId);
     return { success: true, message: 'Email sent successfully', messageId: result.messageId };
   } catch (error) {
     console.error('Error in sendEscapePhoto:', error);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Error response:', error.response);
     console.error('Error stack:', error.stack);
     // If it's already an HttpsError, re-throw it
     if (error instanceof functions.https.HttpsError) {
       throw error;
     }
-    // Otherwise, wrap it with more details
+    // Provide more detailed error message
+    const errorMessage = error.response 
+      ? `SMTP Error ${error.responseCode || ''}: ${error.response}`
+      : error.message || 'Unknown error';
     throw new functions.https.HttpsError(
       'internal',
-      `Failed to send email: ${error.message || 'Unknown error'}`
+      `Failed to send email: ${errorMessage}`
     );
   }
 });
