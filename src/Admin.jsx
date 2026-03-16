@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { db, app } from './firebase';
+import { db } from './firebase';
 import { ref, set } from 'firebase/database';
-import { getFunctions, httpsCallable } from 'firebase/functions';
 import TimeScrollBar from './components/TimeScrollBar';
 import PhotoCapture from './components/PhotoCapture';
 
@@ -71,23 +70,55 @@ export default function Admin() {
       // Send email in background - don't block the UI
       (async () => {
         try {
-          // Initialize Firebase Functions - specify region explicitly
-          const functions = getFunctions(app, 'us-central1');
-          const sendEscapePhoto = httpsCallable(functions, 'sendEscapePhoto');
+          const functionUrl = 'https://us-central1-esc1-11586.cloudfunctions.net/sendEscapePhoto';
           
-          const result = await sendEscapePhoto({
+          const requestData = {
             photoBase64: photoData,
             teamName,
             roomName: selected,
             escapeTime,
             customerEmail: customerEmail.trim(),
+          };
+
+          // Log what we're sending (without the full base64 string)
+          console.log('Sending email request:', {
+            hasPhoto: !!photoData,
+            photoLength: photoData?.length,
+            teamName,
+            roomName: selected,
+            escapeTime,
+            customerEmail: customerEmail.trim(),
           });
-          console.log('Email sent successfully:', result.data);
+          
+          const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          });
+
+          console.log('Response status:', response.status);
+          console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+          if (!response.ok) {
+            let errorData;
+            try {
+              errorData = await response.json();
+            } catch (e) {
+              const text = await response.text();
+              throw new Error(`HTTP ${response.status}: ${text}`);
+            }
+            console.error('Error response data:', errorData);
+            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log('Email sent successfully:', result);
           // Update message if still on same page
           setMessage('Posted! ✓ Email sent');
         } catch (error) {
           console.error('Error sending email:', error);
-          console.error('Error code:', error.code);
           console.error('Error message:', error.message);
           // Email failure is non-critical - don't show error to user
           // The post was successful, that's what matters
