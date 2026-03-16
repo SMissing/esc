@@ -1,0 +1,41 @@
+/* Make the split-flap display much larger */
+.large-flap {
+  font-size: 220px !important;
+  height: 260px !important;
+  min-height: 260px !important;
+  line-height: 1.1 !important;
+}
+
+/* Photo roll animation */
+.photo-roll-container {
+  animation: photoRollContainer 1.5s ease-out;
+}
+
+@keyframes photoRollContainer {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.photo-roll-image {
+  animation: photoRollIn 1.5s ease-out;
+  transform-origin: center center;
+}
+
+@keyframes photoRollIn {
+  0% {
+    transform: perspective(1000px) rotateX(90deg) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: perspective(1000px) rotateX(0deg) scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: perspective(1000px) rotateX(0deg) scale(1);
+    opacity: 1;
+  }
+}

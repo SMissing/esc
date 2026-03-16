@@ -1,0 +1,29 @@
+/* Highlight effect for newly added leaderboard row */
+
+
+
+/* Base highlight for all activities (no animation) */
+.new-row-highlight {
+  /* No animation, just instant highlight */
+}
+
+/* Circus: Red/Gold */
+.highlight-circus {
+  box-shadow: 0 0 0 4px #e5393588, 0 0 16px 8px #ffd70044;
+  background: linear-gradient(90deg, #1e1d1b 0%, #e53935 50%, #ffd700 100%);
+}
+
+
+/* Removed animation for instant highlight */
+
+/* Labyrinth: Green */
+.highlight-labyrinth {
+  box-shadow: 0 0 0 4px #93c72c88, 0 0 16px 8px #93c72c44;
+  background: linear-gradient(90deg, #323631 0%, #93c72c 50%, #6b8e23 100%);
+}
+
+/* Cabin: Purple */
+.highlight-cabin {
+  box-shadow: 0 0 0 4px #cc67f488, 0 0 16px 8px #cc67f444;
+  background: linear-gradient(90deg, #2a262a 0%, #cc67f4 50%, #9b59b6 100%);
+}
