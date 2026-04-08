@@ -1,0 +1,45 @@
+/* Metallic paint effect for leaderboard medals */
+.metallic-gold {
+  background: linear-gradient(90deg, #fffbe6 0%, #ffe066 20%, #ffd700 50%, #ffe066 80%, #fffbe6 100%);
+  background-size: 200% auto;
+  color: #fffbe6;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: metallic-paint-gold 3s linear infinite;
+  font-weight: 700;
+}
+@keyframes metallic-paint-gold {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.metallic-silver {
+  background: linear-gradient(90deg, #f8f9fa 0%, #d1d5db 20%, #b0b0b0 50%, #d1d5db 80%, #f8f9fa 100%);
+  background-size: 200% auto;
+  color: #f8f9fa;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: metallic-paint-silver 3s linear infinite;
+  font-weight: 700;
+}
+@keyframes metallic-paint-silver {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.metallic-bronze {
+  background: linear-gradient(90deg, #fbeee6 0%, #e0a96d 20%, #cd7f32 50%, #e0a96d 80%, #fbeee6 100%);
+  background-size: 200% auto;
+  color: #fbeee6;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: metallic-paint-bronze 3s linear infinite;
+  font-weight: 700;
+}
+@keyframes metallic-paint-bronze {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}

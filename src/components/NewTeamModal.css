@@ -1,0 +1,7 @@
+/* Make the split-flap display much larger */
+.large-flap {
+  font-size: 220px !important;
+  height: 260px !important;
+  min-height: 260px !important;
+  line-height: 1.1 !important;
+}

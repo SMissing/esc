@@ -1,0 +1,77 @@
+/* Rocker Switch Styles for Leaderboard Toggle */
+.rocker-toggle-container {
+  position: fixed;
+  top: 32px;
+  right: 32px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rocker {
+  display: inline-block;
+  position: relative;
+  font-size: 1.3em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: #bbb;
+  width: 6em;
+  height: 3.2em;
+  overflow: hidden;
+  border-bottom: 0.3em solid #222;
+  background: #222;
+  border-radius: 1.5em 1.5em 1.2em 1.2em;
+  box-shadow: 0 2px 12px #000a;
+}
+.rocker input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch-left,
+.switch-right {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2em;
+  width: 2.5em;
+  transition: 0.2s;
+  font-family: inherit;
+  font-size: 1.1em;
+  letter-spacing: 0.1em;
+  border-radius: 1em;
+}
+.switch-left {
+  left: 0.5em;
+  bottom: 0.4em;
+  background-color: #444;
+  color: #fff;
+  box-shadow: 0 1px 4px #0006;
+}
+.switch-right {
+  right: 0.5em;
+  bottom: 0.4em;
+  background-color: #2196f3;
+  color: #fff;
+  box-shadow: 0 1px 4px #0006;
+}
+input:checked + .switch-left {
+  background-color: #222;
+  color: #bbb;
+  box-shadow: none;
+}
+input:checked + .switch-left + .switch-right {
+  background-color: #e53935;
+  color: #fff;
+  box-shadow: 0 1px 4px #0006;
+}
+input:checked + .switch-left + .switch-right {
+  font-weight: bold;
+}
+input:focus + .switch-left,
+input:focus + .switch-left + .switch-right {
+  outline: 2px solid #ffd700;
+}
